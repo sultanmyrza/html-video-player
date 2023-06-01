@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Video Picker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      #videoPlayer {
+        width: 320px;
+        height: 240px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Select a video file</h1>
+    <input type="file" accept="video/*" onchange="loadVideo(event)" />
+    <br />
+    <video id="videoPlayer" controls></video>
+    <div id="actualError"></div>
+    <br />
+    <div id="chatGPTError"></div>
+
+    <script>
+      function loadVideo(event) {
+        const file = event.target.files[0];
+        const videoPlayer = document.getElementById("videoPlayer");
+        const actualError = document.getElementById("actualError");
+        const chatGPTError = document.getElementById("chatGPTError");
+
+        if (file) {
+          const fileUrl = URL.createObjectURL(file);
+          videoPlayer.src = fileUrl;
+        }
+
+        videoPlayer.onerror = function () {
+          let message;
+          switch (videoPlayer.error.code) {
+            case videoPlayer.error.MEDIA_ERR_ABORTED:
+              message = "You aborted the video playback.";
+              break;
+            case videoPlayer.error.MEDIA_ERR_NETWORK:
+              message = "A network error caused the video download to fail.";
+              break;
+            case videoPlayer.error.MEDIA_ERR_DECODE:
+              message =
+                "The video playback was aborted due to a corruption problem or because the video used features your browser did not support.";
+              break;
+            case videoPlayer.error.MEDIA_ERR_SRC_NOT_SUPPORTED:
+              message =
+                "The video could not be loaded, either because the server or network failed or because the format is not supported.";
+              break;
+            default:
+              message = "An unknown error occurred.";
+              break;
+          }
+          actualError.textContent = `${videoPlayer.error.message} (${videoPlayer.error.code})`;
+          chatGPTError.textContent = `ChatGPT: ${message}`;
+        };
+      }
+    </script>
+  </body>
+</html>
