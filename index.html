@@ -26,6 +26,10 @@
         const actualError = document.getElementById("actualError");
         const chatGPTError = document.getElementById("chatGPTError");
 
+        // reset errors
+        actualError.textContent = "";
+        chatGPTError.textContent = "";
+
         if (file) {
           const fileUrl = URL.createObjectURL(file);
           videoPlayer.src = fileUrl;
